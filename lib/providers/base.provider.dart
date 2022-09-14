@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_auth/enum/app_state.dart';
 
-class BaseModel extends ChangeNotifier {
+class BaseProvider extends ChangeNotifier {
   ViewState _viewState = ViewState.ideal;
 
   ViewState get viewState => _viewState;

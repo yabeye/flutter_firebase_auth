@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_firebase_auth/model/auth.model.dart';
+import 'package:flutter_firebase_auth/providers/auth.provider.dart';
 import 'package:flutter_firebase_auth/ui/auth_page.dart';
 import 'package:flutter_firebase_auth/ui/base_view.dart';
 import 'package:flutter_firebase_auth/ui/home_page.dart';
@@ -15,18 +15,13 @@ class LandingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<AuthModel>(
+    return BaseView<AuthProvider>(
       builder: (context, authModel, child) => StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            return snapshot.hasData
-                ? const HomePage()
-                : AuthPage(
-                    emailController: emailController,
-                    passwordController: passwordController,
-                    authModel: authModel,
-                  );
-          }),
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          return snapshot.hasData ? const HomePage() : const AuthPage();
+        },
+      ),
     );
   }
 }

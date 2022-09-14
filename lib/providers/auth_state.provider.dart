@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_firebase_auth/enum/app_state.dart';
-import 'package:flutter_firebase_auth/model/auth.model.dart';
-import 'package:flutter_firebase_auth/model/base.model.dart';
+import 'package:flutter_firebase_auth/providers/auth.provider.dart';
+import 'package:flutter_firebase_auth/providers/base.provider.dart';
 
-class AuthStateModel extends BaseModel {
-  switchAuthenticationState(AuthModel authModel) {
+class AuthStateProvider extends BaseProvider {
+  switchAuthenticationState(AuthProvider authModel) {
     authModel.authState == AuthState.signIn
         ? authModel.setAuthState(AuthState.signUp)
         : authModel.setAuthState(AuthState.signIn);
   }
 
   switchAuthenticationMethod(
-    AuthModel authModel,
+    AuthProvider authModel,
     TextEditingController emailController,
     TextEditingController passwordController,
   ) {
@@ -26,11 +26,11 @@ class AuthStateModel extends BaseModel {
           );
   }
 
-  switchAuthenticationText(AuthModel authModel) {
+  switchAuthenticationText(AuthProvider authModel) {
     return authModel.authState == AuthState.signIn ? "Sign In" : "Sign Up";
   }
 
-  switchAuthenticationOption(AuthModel authModel) {
+  switchAuthenticationOption(AuthProvider authModel) {
     return authModel.authState == AuthState.signIn
         ? "Create account ??"
         : "Already registered ??";
