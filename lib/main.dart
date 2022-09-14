@@ -1,22 +1,57 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_auth/locator.dart';
-import 'package:flutter_firebase_auth/routes/routes.dart';
+import 'package:flutter_firebase_auth/src/enums.dart';
+import 'package:flutter_firebase_auth/src/home.screen.dart';
+import 'package:flutter_firebase_auth/src/providers/auth.providers.dart';
+import 'package:flutter_firebase_auth/src/routes/routes.dart';
+import 'package:flutter_firebase_auth/src/screens/auth.screen.dart';
+import 'package:provider/provider.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  setupLocator();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      initialRoute: 'landing',
-      onGenerateRoute: Routers.generateRoute,
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: AuthProvider()),
+        ],
+        builder: (context, snapshot) {
+          return MaterialApp(
+            title: 'Flutter Firebase Authentication',
+            home: const WidgetTree(),
+            routes: routes,
+          );
+        });
+  }
+}
+
+class WidgetTree extends StatelessWidget {
+  const WidgetTree({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    // if (authProvider.getUser() == null) {
+    //   authProvider.handleInitialSetUp();
+    // }
+
+    return StreamBuilder(
+      stream: authProvider.getAuthState(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return const HomeScreen();
+        } else {
+          return AuthScreen();
+        }
+      },
     );
   }
 }
