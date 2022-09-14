@@ -16,16 +16,38 @@ class AuthProvider with ChangeNotifier {
 
   getAuthState() => _firebaseAuth.authStateChanges();
 
-  Future signIn(String email, String password) async {
+  Future signIn({required String email, required String password}) async {
     setIsAuthLoading(true);
     try {
-      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+      await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      setIsAuthLoading(false);
+    } catch (e) {
+      setIsAuthLoading(false);
+      rethrow;
+    }
+  }
 
-      final userData = userCredential.user;
+  Future signUp({required String email, required String password}) async {
+    setIsAuthLoading(true);
+    try {
+      await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      setIsAuthLoading(false);
+    } catch (e) {
+      setIsAuthLoading(false);
+      rethrow;
+    }
+  }
 
+  Future resetPassword({required String email}) async {
+    setIsAuthLoading(true);
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
       setIsAuthLoading(false);
     } catch (e) {
       setIsAuthLoading(false);

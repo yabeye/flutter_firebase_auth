@@ -20,16 +20,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider.value(value: AuthProvider()),
-        ],
-        builder: (context, snapshot) {
-          return MaterialApp(
-            title: 'Flutter Firebase Authentication',
-            home: const WidgetTree(),
-            routes: routes,
-          );
-        });
+      providers: [
+        ChangeNotifierProvider.value(value: AuthProvider()),
+      ],
+      builder: (context, snapshot) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Firebase Authentication',
+          home: const WidgetTree(),
+          routes: routes,
+        );
+      },
+    );
   }
 }
 

@@ -28,6 +28,39 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future resetPassword() async {
+    try {
+      // debugPrint("Current User ${_authProvider!.getUser()}");
+      final user = _authProvider!.user;
+      await _authProvider!.resetPassword(email: user.email);
+      // set up the AlertDialog
+      AlertDialog alert = AlertDialog(
+        title: const Text("Reset Password"),
+        content: const Text("Please check your email!"),
+        actions: [
+          TextButton(
+              onPressed: () {
+                // some logic!
+                Navigator.of(context).pop();
+              },
+              child: const Text('Ok'))
+        ],
+      );
+
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    } on FirebaseAuthException catch (e) {
+      Helpers.showErrorDialog(e.message, context);
+    } catch (e) {
+      Helpers.showErrorDialog("Unable to Sign out", context);
+    }
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -73,11 +106,21 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Text('${user.email}'),
+            const SizedBox(
+              height: 50,
+            ),
             const Divider(),
             TextButton(
               onPressed: signOut,
               child: const Text('Sign Out'),
-            )
+            ),
+            const Divider(),
+            Container(
+              child: TextButton(
+                onPressed: resetPassword,
+                child: const Text('Change Password'),
+              ),
+            ),
           ],
         ),
       ),
