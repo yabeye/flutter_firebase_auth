@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -91,20 +88,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CachedNetworkImage(
-              width: MediaQuery.of(context).size.width * .25,
-              height: MediaQuery.of(context).size.width * .25,
-              progressIndicatorBuilder: (context, url, progress) => Center(
-                child: CircularProgressIndicator(
-                  value: progress.progress,
-                ),
-              ),
-              imageUrl: user!.photoURL ??
-                  'https://static.vecteezy.com/system/resources/thumbnails/009/507/522/small/blue-avatar-sign-semi-flat-color-icon-customer-profile-anonymous-guest-full-sized-item-on-white-network-simple-cartoon-style-illustration-for-web-graphic-design-and-animation-vector.jpg',
-            ),
-            const SizedBox(
-              height: 30,
-            ),
             const Text('User Info: '),
             const Text(
               'User Id: ',
