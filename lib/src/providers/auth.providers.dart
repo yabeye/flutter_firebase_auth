@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_firebase_auth/src/enums.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -77,6 +76,8 @@ class AuthProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future facebookSignIn() async {}
 
   Future signOut() async {
     try {
