@@ -83,6 +83,9 @@ class AuthProvider with ChangeNotifier {
     try {
       final facebookLoginResult = await _facebookAuth.login();
       // final userData  = await _facebookAuth.getUserData();
+      if (facebookLoginResult.accessToken == null) {
+        return;
+      }
 
       final facebookAuthCredential = FacebookAuthProvider.credential(
           facebookLoginResult.accessToken!.token);
