@@ -4,6 +4,7 @@ import 'package:flutter_firebase_auth/src/screens/home.screen.dart';
 import 'package:flutter_firebase_auth/src/providers/auth.providers.dart';
 import 'package:flutter_firebase_auth/src/routes/routes.dart';
 import 'package:flutter_firebase_auth/src/screens/auth.screen.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
