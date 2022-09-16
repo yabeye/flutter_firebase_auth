@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_firebase_auth/src/enums.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthProvider with ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   bool _isAuthLoading = false;
   get isAuthLoading => _isAuthLoading;
@@ -54,6 +57,27 @@ class AuthProvider with ChangeNotifier {
       rethrow;
     }
   }
+
+  Future googleSignIn() async {
+    try {
+      final googleUser = await _googleSignIn.signIn();
+
+      if (googleUser == null) throw const HttpException('SignIn failed.');
+      // else
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      rethrow;
+    }
+    notifyListeners();
+  }
+
+  Future facebookSignIn() async {}
 
   Future signOut() async {
     try {
