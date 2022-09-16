@@ -62,14 +62,21 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
+  bool _signingIn = false;
+
   Future facebookSignIn() async {
+    _signingIn = true;
+    setState(() {});
     try {
       await _authProvider!.facebookSignIn();
     } on FirebaseAuthException catch (e) {
       Helpers.showErrorDialog(e.message, context);
     } catch (e) {
+      debugPrint(e.toString());
       Helpers.showErrorDialog("Unable to sign in with facebook", context);
     }
+    _signingIn = false;
+    setState(() {});
   }
 
   @override
@@ -158,25 +165,27 @@ class _AuthScreenState extends State<AuthScreen> {
                           socialIcon: FontAwesomeIcons.google,
                           socialIconColor: Colors.red,
                           socialName: 'Google',
-                          onTap: googleSignIn,
+                          onTap: _signingIn ? () => null : googleSignIn,
                         ),
                         SocialLogin(
                           socialIcon: FontAwesomeIcons.facebook,
                           socialIconColor: Colors.blue,
                           socialName: 'Facebook',
-                          onTap: facebookSignIn,
+                          onTap: _signingIn ? () => null : facebookSignIn,
                         ),
                         SocialLogin(
                           socialIcon: FontAwesomeIcons.github,
                           socialIconColor: Colors.black,
                           socialName: 'GitHub',
-                          onTap: () {
-                            debugPrint("Github LogIn");
-                            Helpers.showErrorDialog(
-                              "Coming Soon. Not Implemented",
-                              context,
-                            );
-                          },
+                          onTap: _signingIn
+                              ? () => null
+                              : () {
+                                  debugPrint("Github LogIn");
+                                  Helpers.showErrorDialog(
+                                    "Coming Soon. Not Implemented",
+                                    context,
+                                  );
+                                },
                         ),
                       ],
                     ),
