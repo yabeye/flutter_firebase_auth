@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthProvider with ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FacebookAuth _facebookAuth = FacebookAuth.instance;
 
   bool _isAuthLoading = false;
   get isAuthLoading => _isAuthLoading;
@@ -77,7 +79,23 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future facebookSignIn() async {}
+  Future facebookSignIn() async {
+    try {
+      final facebookLoginResult = await _facebookAuth.login();
+      // final userData  = await _facebookAuth.getUserData();
+      debugPrint(facebookLoginResult.accessToken.toString());
+
+      if (facebookLoginResult.accessToken == null) {
+        return;
+      }
+
+      final facebookAuthCredential = FacebookAuthProvider.credential(
+          facebookLoginResult.accessToken!.token);
+      await _firebaseAuth.signInWithCredential(facebookAuthCredential);
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   Future signOut() async {
     try {

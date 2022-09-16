@@ -8,7 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class AuthScreen extends StatefulWidget {
-  AuthScreen({Key? key}) : super(key: key);
+  const AuthScreen({Key? key}) : super(key: key);
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
@@ -31,7 +31,8 @@ class _AuthScreenState extends State<AuthScreen> {
     } on FirebaseAuthException catch (e) {
       Helpers.showErrorDialog(e.message, context);
     } catch (e) {
-      Helpers.showErrorDialog("Unable to sign in ! Please Try Again!", context);
+      Helpers.showErrorDialog(
+          "Unable to sign in with google. Please Try Again!", context);
     }
   }
 
@@ -44,7 +45,8 @@ class _AuthScreenState extends State<AuthScreen> {
     } on FirebaseAuthException catch (e) {
       Helpers.showErrorDialog(e.message, context);
     } catch (e) {
-      Helpers.showErrorDialog("Unable to sign up. Please Try Again!", context);
+      Helpers.showErrorDialog(
+          "Unable to sign in with facebook. Please Try Again!", context);
     }
   }
 
@@ -56,8 +58,25 @@ class _AuthScreenState extends State<AuthScreen> {
     } on HttpException catch (_) {
       Helpers.showErrorDialog("Try Again!", context);
     } catch (e) {
-      Helpers.showErrorDialog("Unable to do that!", context);
+      Helpers.showErrorDialog("Unable to sign in with google", context);
     }
+  }
+
+  bool _signingIn = false;
+
+  Future facebookSignIn() async {
+    _signingIn = true;
+    setState(() {});
+    try {
+      await _authProvider!.facebookSignIn();
+    } on FirebaseAuthException catch (e) {
+      Helpers.showErrorDialog(e.message, context);
+    } catch (e) {
+      debugPrint(e.toString());
+      Helpers.showErrorDialog("Unable to sign in with facebook", context);
+    }
+    _signingIn = false;
+    setState(() {});
   }
 
   @override
@@ -146,31 +165,27 @@ class _AuthScreenState extends State<AuthScreen> {
                           socialIcon: FontAwesomeIcons.google,
                           socialIconColor: Colors.red,
                           socialName: 'Google',
-                          onTap: googleSignIn,
+                          onTap: _signingIn ? () => null : googleSignIn,
                         ),
                         SocialLogin(
                           socialIcon: FontAwesomeIcons.facebook,
                           socialIconColor: Colors.blue,
                           socialName: 'Facebook',
-                          onTap: () {
-                            debugPrint("Facebook LogIn");
-                            Helpers.showErrorDialog(
-                              "Coming Soon. Not Implemented",
-                              context,
-                            );
-                          },
+                          onTap: _signingIn ? () => null : facebookSignIn,
                         ),
                         SocialLogin(
                           socialIcon: FontAwesomeIcons.github,
                           socialIconColor: Colors.black,
                           socialName: 'GitHub',
-                          onTap: () {
-                            debugPrint("Github LogIn");
-                            Helpers.showErrorDialog(
-                              "Coming Soon. Not Implemented",
-                              context,
-                            );
-                          },
+                          onTap: _signingIn
+                              ? () => null
+                              : () {
+                                  debugPrint("Github LogIn");
+                                  Helpers.showErrorDialog(
+                                    "Coming Soon. Not Implemented",
+                                    context,
+                                  );
+                                },
                         ),
                       ],
                     ),
