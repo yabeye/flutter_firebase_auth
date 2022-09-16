@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_auth/src/enums.dart';
-import 'package:flutter_firebase_auth/src/home.screen.dart';
+import 'package:flutter_firebase_auth/src/screens/home.screen.dart';
 import 'package:flutter_firebase_auth/src/providers/auth.providers.dart';
 import 'package:flutter_firebase_auth/src/routes/routes.dart';
 import 'package:flutter_firebase_auth/src/screens/auth.screen.dart';
